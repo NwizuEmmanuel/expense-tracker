@@ -4,9 +4,10 @@ from datetime import datetime
 import csv
 import argparse
 import os
+import calendar
 
 FILENAME = "db.csv"
-HEADERS = ['id', 'description', 'amount','date']
+HEADERS = ['id', 'description', 'amount', 'date']
 
 
 def check_db():
@@ -57,7 +58,6 @@ def get_id():
 def add_expense(args):
     """Expense function"""
     now = datetime.now()
-    now = now.strftime("%d/%m/%Y")
     data = [
         get_id(),
         args.description,
@@ -72,7 +72,7 @@ def add_expense(args):
 def list_expense(_):
     """List expense"""
     for item in read_db()['data']:
-        print(f"{item[0]}. {item[1]}: {item[2]}")
+        print(f"{item[0]}. {item[1]}: {item[2]} ({item[3]})")
 
 
 def delete_expense(args):
@@ -82,16 +82,27 @@ def delete_expense(args):
     print(f"Expense delete: {args.id}")
 
 
+def get_month_name(month_number):
+    """get month index"""
+    if 1 <= month_number <=12:
+        return calendar.month_name[month_number]
+    else:
+        return month_number
+
+
 def summary(args):
     """To get the summary"""
     data = read_db()["data"]
     result = 0
-    for item in data:
-        result += float(item[2])
-
-    if args.month > 0:
-        pass
-    print(f"Total: {result}")
+    if not (args.month > 0):
+        for item in data:
+            result += float(item[2])
+        print(f"Total expense: {result}")
+    else:
+        for item in data:
+            datetime_obj = datetime.strptime(item[3], '%Y-%m-%d %H:%M:%S.%f')
+            result += float(item[2]) if datetime_obj.month == args.month else 0
+        print(f"Total expense for {get_month_name(args.month)}: {result}")
 
 
 def main():
@@ -103,17 +114,19 @@ def main():
 
     add_parser = subparsers.add_parser("add", help="To add new expense.")
     add_parser.add_argument("-d", "--description",
-                            required=True, help="Description of expense.")
+                            help="Description of expense.")
     add_parser.add_argument("-a", "--amount", type=float,
-                            required=True, help="Amount of expense.")
+                            help="Amount of expense.")
 
     _ = subparsers.add_parser("list", help="List expenses")
 
     delete_parser = subparsers.add_parser("delete", help="To delete expense.")
     delete_parser.add_argument("id", type=int, help="Expense ID to delete.")
 
-    summary_parser = subparsers.add_parser("summary", help="To summarize expense")
-    summary_parser.add_argument("--month", type=int, help="Filter with month.")
+    summary_parser = subparsers.add_parser(
+        "summary", help="To summarize expense")
+    summary_parser.add_argument(
+        "--month", type=int, help="Filter with month.", default=0)
 
     args = parser.parse_args()
     commands = {
