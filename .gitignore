@@ -1,3 +1,6 @@
 .venv
 *.csv
 *demo.py
+build
+dist
+*.egg-info

@@ -5,6 +5,7 @@ import csv
 import argparse
 import os
 import calendar
+import sys
 
 
 class ExpenseTracker():
@@ -147,7 +148,11 @@ class ExpenseTracker():
         summary_parser.add_argument(
             "--month", type=int, help="Filter with month.", default=0)
 
-
-if __name__ == "__main__":
+def main():
+    """main function"""
     app = ExpenseTracker()
     app.run_command()
+
+
+if __name__ == "__main__":
+    main()
