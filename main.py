@@ -85,7 +85,7 @@ class ExpenseTracker():
             self.get_id(),
             self.args.description,
             self.args.amount,
-            now.strftime('%Y-%m-%d %H:%M%:%S')
+            now.strftime('%Y-%m-%d %H:%M:%S')
         ]
         self.write_to_db(data=data, mode='a')
         print("saved")
@@ -150,5 +150,4 @@ class ExpenseTracker():
 
 if __name__ == "__main__":
     app = ExpenseTracker()
-    app.add_commands()
     app.run_command()
