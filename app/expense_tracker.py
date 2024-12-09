@@ -52,9 +52,9 @@ class ExpenseTracker:
             dest="command", help="Available commands")
         self.add_commands()
 
-    def run(self):
+    def run(self, args):
         """Parse arguments and execute the corresponding command"""
-        args = self.parser.parse_args()
+        args = self.parser.parse_args(args)
         if args.command:
             try:
                 command_func = getattr(self, f"command_{args.command}")
@@ -63,7 +63,6 @@ class ExpenseTracker:
                 logging.error("Command not implemented.")
         else:
             self.parser.print_help()
-
 
     def add_commands(self):
         """Define CLI commands."""
@@ -140,16 +139,8 @@ class ExpenseTracker:
                 total += float(item[2])
 
         if month > 0:
-            logging.info("Total expenses for %s: %s", calendar.month_name[month], total)
+            logging.info("Total expenses for %s: %s",
+                         calendar.month_name[month], total)
         else:
             logging.info("Total expense: %s", total)
 
-
-def main():
-    """main function"""
-    app = ExpenseTracker()
-    app.run()
-
-
-if __name__ == "__main__":
-    main()
