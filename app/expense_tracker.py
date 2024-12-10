@@ -22,7 +22,9 @@ class DatabaseHandler:
     def check_db(self):
         """Check if the database exists, and create it if not."""
         if not os.path.exists(self.filename):
-            with open(self.filename, 'w', newline='', encoding='utf-8') as file:
+            with open(self.filename, 'w',
+                      newline='',
+                      encoding='utf-8') as file:
                 csv.writer(file).writerow(self.header)
 
     def read_data(self):
@@ -52,9 +54,9 @@ class ExpenseTracker:
             dest="command", help="Available commands")
         self.add_commands()
 
-    def run(self, args):
+    def run(self):
         """Parse arguments and execute the corresponding command"""
-        args = self.parser.parse_args(args)
+        args = self.parser.parse_args()
         if args.command:
             try:
                 command_func = getattr(self, f"command_{args.command}")
@@ -68,9 +70,12 @@ class ExpenseTracker:
         """Define CLI commands."""
         add_parser = self.subparsers.add_parser("add", help="Add new expense.")
         add_parser.add_argument(
-            "-d", "--description", required=True, help="Description of the expense.")
+            "-d", "--description", required=True,
+            help="Description of the expense.")
         add_parser.add_argument(
-            "-a", "--amount", type=float, required=True, help="Amount of the expense.")
+            "-a", "--amount",
+            type=float, required=True,
+            help="Amount of the expense.")
 
         self.subparsers.add_parser("list", help="List all expenses.")
 
@@ -82,7 +87,9 @@ class ExpenseTracker:
         summary_parser = self.subparsers.add_parser(
             "summary", help="Summarize expenses.")
         summary_parser.add_argument(
-            "--month", '-m', type=int, help="Summarize for a specific month (1-12)", default=0)
+            "--month", '-m', type=int,
+            help="Summarize for a specific month (1-12)",
+            default=0)
 
     def generate_id(self):
         """
@@ -143,4 +150,3 @@ class ExpenseTracker:
                          calendar.month_name[month], total)
         else:
             logging.info("Total expense: %s", total)
-

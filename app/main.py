@@ -1,10 +1,11 @@
 """Main module"""
-from app.expense_tracker import ExpenseTracker
+from expense_tracker import ExpenseTracker
 
-def main(args=None):
+
+def main():
     """Main function"""
     app = ExpenseTracker()
-    app.run(args)
+    app.run()
 
 
 if __name__ == "__main__":
