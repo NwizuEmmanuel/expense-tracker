@@ -14,29 +14,29 @@ logging.basicConfig(level=logging.INFO,
 class DatabaseHandler:
     """Handles database operation for the expense tracker."""
 
-    def __init__(self, filename="db.csv"):
-        self.filename = filename
+    FILENAME = "db.csv"
+    def __init__(self):
         self.header = ['id', 'description', 'amount', 'date']
         self.check_db()
 
     def check_db(self):
         """Check if the database exists, and create it if not."""
-        if not os.path.exists(self.filename):
-            with open(self.filename, 'w',
+        if not os.path.exists(self.FILENAME):
+            with open(self.FILENAME, 'w',
                       newline='',
                       encoding='utf-8') as file:
                 csv.writer(file).writerow(self.header)
 
     def read_data(self):
         """Read and return all data from database"""
-        with open(self.filename, 'r', encoding='utf-8') as file:
+        with open(self.FILENAME, 'r', encoding='utf-8') as file:
             reader = csv.reader(file)
             data = list(reader)
         return {'header': data[0], 'data': data[1:]}
 
     def write_data(self, data, mode='w'):
         """write data to database"""
-        with open(self.filename, mode, newline='', encoding='utf-8') as file:
+        with open(self.FILENAME, mode, newline='', encoding='utf-8') as file:
             writer = csv.writer(file)
             if mode == 'w':
                 writer.writerow(self.header)
